@@ -1,5 +1,6 @@
 require_relative 'route.rb'
 require_relative 'stations.rb'
+require_relative 'train.rb'
 require_relative 'pasanger_train.rb'
 require_relative 'cargo_train.rb'
 require_relative 'cargo_carriage.rb'
@@ -41,6 +42,12 @@ class RailWay
     train_by_num('222-гп').sent_train(total_routs[0])
     train_by_num('333-пп').sent_train(total_routs[0])
     train_by_num('444-пп').sent_train(total_routs[0])
+    #Добавляем вагоны поезду 111-гп
+    train_by_num('111-гп').add_carriage(carriage_by_num('111-гв'))
+    train_by_num('111-гп').add_carriage(carriage_by_num('222-гв'))
+    train_by_num('333-пп').add_carriage(carriage_by_num('333-пв'))
+    train_by_num('333-пп').add_carriage(carriage_by_num('444-пв'))
+
   end
 
   def interface
@@ -61,6 +68,8 @@ class RailWay
     puts ' 7.Удалить станцию с маршрута '
     puts ' 8.Показать все маршруты'
     puts ' 9.Назначить поезду маршрут '
+    puts ' 91. Создать новый вагон '
+    puts ' 92. Заполнить вагон '
     puts ' 10.Добавить вагон к поезду '
     puts ' 11.Отцепить вагон от поезда '
     puts ' 12.Отправить поезд вперед '
@@ -114,6 +123,10 @@ class RailWay
       list_trains_on_station
     when '41'
       show_train_by_num
+    when '91'
+      create_carriage
+    when '92'
+    add_in_carriage
     end
     end
   end
@@ -125,7 +138,7 @@ class RailWay
     puts 'Введите название станции:'
     station_name = gets.chomp
     self.total_stations.push(Station.new(station_name))
-    puts " Станция #{station_name} обавлена. "
+    puts " Станция #{station_name} добавлена. "
   rescue
     puts ' Неверный формат имени станции. Наберите название станции по русски. '
   end
@@ -155,6 +168,27 @@ class RailWay
     print 'Введите номер поезда:'
     train_num = gets.chomp
     add_train(type, train_num)
+  end
+
+  def create_carriage
+    print ' Выберите тип новго вагона 1.Пассажирски/2.Грузовой: '
+    type = gets.chomp
+    print 'Введите номер вагона:'
+    carriage_num = gets.chomp
+    print ' Введите количество мест/максимальную загрузку:'
+    cargo = gets.chomp
+    create_new_carriage(type, carriage_num, cargo)
+  end
+
+  def add_in_carriage
+    print ' Введите номер вагона '
+    carr_num = gets.chomp
+    if carriage_by_num(carr_num).type == :cargo
+      print "Введите обьем погрузки не (не больше #{carriage_by_num(carr_num).show_avaliable}):"
+      carriage_by_num(carr_num).add_good(gets.chomp.to_f)
+    else
+      carriage_by_num(carr_num).add_passanger
+    end
   end
 
   def create_route
@@ -246,7 +280,14 @@ class RailWay
     #Показывает обьект поезд по выбранному номеру используя метод класс
     print ' Введите номер поезда:'
     train_num = gets.chomp
-    puts Train.find(train_num).inspect
+    #Метод дополнен блоком согласно заданию урока 8
+    #puts Train.find(train_num).inspect
+    Train.find(train_num).list_carriages do |carr|
+      if carr.type == :cargo
+      puts "вагон номер #{carr.carr_num} загружено #{carr.show_use}тн. /свободно #{carr.show_avaliable}тн."
+      else puts "вагон номер #{carr.carr_num} занято #{carr.show_use} мест /свободно #{carr.show_avaliable} мест."
+      end
+      end
   end
 
   def carriage_by_num(carriage_num)
@@ -263,9 +304,23 @@ class RailWay
     elsif type == '1'
       total_trains.push(PasangerTrain.new(train_num))
       puts "Создан пассажирский поезд #{train_num}"
+    else puts ' Введен недопустимй тип вагона'
     end
   rescue
     puts ' Введеннй формат поезда неверен. Допустимый формат №№№-АА. '
+  end
+
+  def create_new_carriage(type, carriage_num, cargo)
+    if type == '1'
+      total_carriages.push(PassangerCarriage.new(carriage_num, cargo.to_i))
+      puts "Создан пассажирский вагон #{carriage_num}"
+    elsif type  == '2'
+      total_carriages.push(CargoCarriage.new(carriage_num, cargo.to_f))
+      puts "Создан грузовой вагон #{carriage_num}"
+    else puts ' Введен недопустимый тип вагона'
+    #rescue puts ' Введеннй формат вагона неверен. Допустимый формат №№№-АА. '
+    end
+
   end
 
   def show_all_rotes

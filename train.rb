@@ -7,7 +7,7 @@ class Train
   include Counter
   @@train_all = []
   @@instances = 0
-  def self.find(train_num)
+  def self.find(train_num, cagro = 10)
     @@train_all.each do |train|
       return train if train.train_num == train_num
     end
@@ -65,6 +65,15 @@ class Train
 
   def move_forvard
     move(next_station)
+  end
+
+  def list_carriages(&block)
+    @total_carriages.each do |carriage|
+    if block_given?
+      yield(carriage)
+    else ' Не передан шаблон для обработки '
+    end
+    end
   end
 
   private

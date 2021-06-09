@@ -8,7 +8,7 @@ class Carriage
 
   CARRIAGE_NAMBER_FORMAT = /[0-9]{3}-[а-я]{2}$/i
 
-  def initialize(carr_num)
+  def initialize(carr_num, cargo = 10)
     @carr_num = carr_num
     validate!
     increase_counter

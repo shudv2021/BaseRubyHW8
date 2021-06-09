@@ -34,13 +34,13 @@ class Station
 
   def list_trains_on_stations(&block)
     @all_trains.each do |train|
-      if block_given?
-        yield(train)
-      else
-      puts ' Не передан механизм обработки'
+        if block_given?
+          yield(train)
+        else
+        nil
+        end
       end
-    end
-    end
+  end
 
   private
   def valide_format!

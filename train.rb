@@ -68,11 +68,12 @@ class Train
   end
 
   def list_carriages(&block)
-    @total_carriages.each do |carriage|
     if block_given?
+    @total_carriages.each do |carriage|
       yield(carriage)
-    else ' Не передан шаблон для обработки '
     end
+    else
+      nil
     end
   end
 

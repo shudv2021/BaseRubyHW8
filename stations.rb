@@ -1,8 +1,9 @@
-require_relative 'counter.rb'
+require_relative 'counter'
 
 class Station
   include Counter
   attr_reader :station_name, :all_trains
+
   @@station_all = []
 
   STATION_FORMAT = /[а-я]*$/i
@@ -11,17 +12,17 @@ class Station
     @@station_all
   end
 
-  def initialize (station_name)
+  def initialize(station_name)
     @station_name = station_name
     validate!
     @all_trains = []
-    @@station_all<<self
+    @@station_all << self
     increase_counter
   end
-  #Все методы используются другими классами
+  # Все методы используются другими классами
 
   def add_train(train)
-    @all_trains<<train
+    @all_trains << train
   end
 
   def delete_train(train)
@@ -32,17 +33,14 @@ class Station
     @all_trains
   end
 
-  def list_trains_on_stations(&block)
+  def list_trains_on_stations
     @all_trains.each do |train|
-        if block_given?
-          yield(train)
-        else
-        nil
-        end
-      end
+      yield(train) if block_given?
+    end
   end
 
   private
+
   def valide_format!
     (@station_name =~ STATION_FORMAT) == 0
   end
@@ -50,8 +48,6 @@ class Station
   def validate!
     raise ' Неверный формат имени станции. ' unless valide_format!
   end
-
-
 end
 
 # +Может принимать поезда (по одному за раз)

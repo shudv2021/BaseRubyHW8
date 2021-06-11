@@ -1,20 +1,20 @@
-require_relative 'modules.rb'
-require_relative 'counter.rb'
-require_relative 'rail_way.rb'
+require_relative 'modules'
+require_relative 'counter'
+require_relative 'rail_way'
 
 class Train
   include Producer
   include Counter
   @@train_all = []
   @@instances = 0
-  def self.find(train_num, cagro = 10)
+  def self.find(train_num, _cagro = 10)
     @@train_all.each do |train|
       return train if train.train_num == train_num
     end
-    return nil
+    nil
   end
 
-  TRAIN_NUMBER_FORMAT =/[0-9]{3}-[а-я]{2}$/i
+  TRAIN_NUMBER_FORMAT = /[0-9]{3}-[а-я]{2}$/i
 
   attr_reader :train_num, :route, :current_station, :speed, :type, :total_carriages
 
@@ -24,7 +24,7 @@ class Train
     @total_carriages = []
     @route
     @speed = 0
-    @@train_all<<self
+    @@train_all << self
     increase_counter
   end
 
@@ -37,13 +37,12 @@ class Train
   end
 
   def add_carriage(carriage)
-
     if @speed != 0
       puts 'Невозможно добавить вагон в движущийся состав.'
-    return nil
-    elsif carriage.type != self.type
+      nil
+    elsif carriage.type != type
       puts 'Невозможно добавить вагон в состав другого типа.'
-    return nil
+      nil
     else @total_carriages.push(carriage)
     end
   end
@@ -53,7 +52,7 @@ class Train
   end
 
   def sent_train(route)
-    @current_station.delete_train(self) if @current_station != nil
+    @current_station.delete_train(self) unless @current_station.nil?
     @route = route
     @current_station = route.all_stations[0]
     @current_station.all_trains.push(self)
@@ -68,29 +67,24 @@ class Train
   end
 
   def list_carriages(&block)
-    if block_given?
-    @total_carriages.each do |carriage|
-      yield(carriage)
-    end
-    else
-      nil
-    end
+    @total_carriages.each(&block) if block_given?
   end
 
   private
+
   def prev_station
     if @route.all_stations.index(@current_station) == 0
-      return nil
+      nil
     else
       @route.all_stations[@route.all_stations.index(@current_station) - 1]
     end
   end
 
   def next_station
-    if @route.all_stations.index(@current_station)  == @route.all_stations.size
-      return nil
+    if @route.all_stations.index(@current_station) == @route.all_stations.size
+      nil
     else
-      return @route.all_stations[@route.all_stations.index(@current_station) + 1]
+      @route.all_stations[@route.all_stations.index(@current_station) + 1]
     end
   end
 
@@ -104,7 +98,6 @@ class Train
     @current_station.all_trains.push(self)
   end
 
-
   def valide_format!
     (@train_num =~ TRAIN_NUMBER_FORMAT) == 0
   end
@@ -112,5 +105,4 @@ class Train
   def validate!
     raise ' Неверный формат имение поезда. ' unless valide_format!
   end
-
 end

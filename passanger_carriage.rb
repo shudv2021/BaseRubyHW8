@@ -1,6 +1,7 @@
-require_relative 'carriages.rb'
+require_relative 'carriages'
 class PassangerCarriage < Carriage
   attr_reader :type, :seats_available, :use_place
+
   def initialize(carr_num, cargo = 40)
     super
     @type = :passanger
@@ -17,10 +18,10 @@ class PassangerCarriage < Carriage
     @seats_available - @use_place
   end
 
-  #Метод можно убрать и использовать attr_reader для use_place, но делаю как сформулировано дз
+  # Метод можно убрать и использовать attr_reader для use_place, но делаю как сформулировано дз
   def show_use
     @use_place
   end
-  #методы добавления груза не сделаны в родительском классе потому что использованны разные типы чисел здесь
+  # методы добавления груза не сделаны в родительском классе потому что использованны разные типы чисел здесь
   # Integer  а в грузовом вагоне Float
 end

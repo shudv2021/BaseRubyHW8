@@ -1,0 +1,12 @@
+Style/Documentation:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Metrics/AbcSize:
+  IgnoredMethods:
+    - 'seed'
+    - 'interface'
+Metrics/ClassLength:
+  IgnoredMethods:
+    - 'seed'
+    - 'interface'

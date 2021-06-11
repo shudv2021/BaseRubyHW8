@@ -7,7 +7,7 @@ require_relative 'cargo_carriage'
 require_relative 'passanger_carriage'
 require_relative 'modules'
 
-class RailWay
+class RailWCyclomatic complexity for intay
   def initialize
     @total_stations = []
     @total_routs = []
@@ -23,24 +23,20 @@ class RailWay
     total_trains.push(CargoTrain.new('222-гп'))
     total_trains.push(PasangerTrain.new('333-пп'))
     total_trains.push(PasangerTrain.new('444-пп'))
-    # Создаем вагоны
     total_carriages.push(CargoCarriage.new('111-гв'))
     carriage_by_num('111-гв').producer = ('BMW')
     total_carriages.push(CargoCarriage.new('222-гв'))
     total_carriages.push(PassangerCarriage.new('333-пв'))
     carriage_by_num('333-пв').producer = ('ReinMetall')
     total_carriages.push(PassangerCarriage.new('444-пв'))
-    # Создаем пробный маршрут
     total_routs << Route.new(total_stations[0], total_stations[4])
     total_routs[0].add_station(1, total_stations[1])
     total_routs[0].add_station(2, total_stations[2])
     total_routs[0].add_station(3, total_stations[3])
-    # отправляем поезда по маршруту
     train_by_num('111-гп').sent_train(total_routs[0])
     train_by_num('222-гп').sent_train(total_routs[0])
     train_by_num('333-пп').sent_train(total_routs[0])
     train_by_num('444-пп').sent_train(total_routs[0])
-    # Добавляем вагоны поезду 111-гп
     train_by_num('111-гп').add_carriage(carriage_by_num('111-гв'))
     train_by_num('111-гп').add_carriage(carriage_by_num('222-гв'))
     train_by_num('333-пп').add_carriage(carriage_by_num('333-пв'))
@@ -48,11 +44,8 @@ class RailWay
   end
 
   def interface
-    #hh_operation = {'1'=>create_station}
     loop do
       system 'clear'
-      # По идеее  строка должна очищать поле вывода, но я вижу всю простыню сообщений
-      # после каждой операции
       puts ' Запущена программа железная дорога '
       puts ' 1.Создать станцию '
       puts ' 2.Показать все станции '
@@ -75,13 +68,9 @@ class RailWay
       puts ' 14.Выйти из программы'
       print ' Выберете действие: '
       action = gets.chomp
-      #Если я хочу переделать вызов через хэш то у меня получается что методы вызываются последоватьельно при
-      # определении хэша то что написано ниже вызывается при старте программы а не при определении action
-      #hh_operation = {'1'=>create_station}
-      # hh_operation[action]
       case action
       when '1'
-     create_station
+        create_station
       when '2'
         show_all_stations
       when '3'
@@ -107,7 +96,6 @@ class RailWay
       when '13'
         sent_train_back
       when '14'
-        # проверка идет ли подсчет элементов на жд
         puts '************************************************************'
         puts ' В процессе работы программы было создано: '
         puts "поездов без типа- #{Train.counter}"
@@ -263,7 +251,7 @@ class RailWay
   end
 
   def show_all_stations_by_all
-    Station.get_all.each { |station| puts station.station_name }
+    Station.gett_all.each { |station| puts station.station_name }
   end
 
   def station_by_name(station_name)
@@ -280,11 +268,8 @@ class RailWay
   end
 
   def show_train_by_num
-    # Показывает обьект поезд по выбранному номеру используя метод класс
     print ' Введите номер поезда:'
     train_num = gets.chomp
-    # Метод дополнен блоком согласно заданию урока 8
-    # puts Train.find(train_num).inspect
     Train.find(train_num).list_carriages do |carr|
       if carr.type == :cargo
         puts "вагон номер #{carr.carr_num} загружено #{carr.show_use}тн. /свободно #{carr.show_avaliable}тн."
@@ -301,10 +286,11 @@ class RailWay
   end
 
   def add_train(type, train_num)
-    if type == '2'
+    case type
+    when '2'
       total_trains.push(CargoTrain.new(train_num))
       puts "Создан грузовой поезд#{train_num}"
-    elsif type == '1'
+    when '1'
       total_trains.push(PasangerTrain.new(train_num))
       puts "Создан пассажирский поезд #{train_num}"
     else puts ' Введен недопустимй тип вагона'
@@ -314,14 +300,14 @@ class RailWay
   end
 
   def create_new_carriage(type, carriage_num, cargo)
-    if type == '1'
+    case type
+    when '1'
       total_carriages.push(PassangerCarriage.new(carriage_num, cargo.to_i))
       puts "Создан пассажирский вагон #{carriage_num}"
-    elsif type == '2'
+    when '2'
       total_carriages.push(CargoCarriage.new(carriage_num, cargo.to_f))
       puts "Создан грузовой вагон #{carriage_num}"
     else puts ' Введен недопустимый тип вагона'
-      # rescue puts ' Введеннй формат вагона неверен. Допустимый формат №№№-АА. '
     end
   end
 

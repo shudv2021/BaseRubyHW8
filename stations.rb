@@ -6,9 +6,9 @@ class Station
 
   @@station_all = []
 
-  STATION_FORMAT = /[а-я]*$/i
+  STATION_FORMAT = /[а-я]*$/i.freeze
 
-  def self.get_all
+  def self.gett_all
     @@station_all
   end
 
@@ -19,7 +19,6 @@ class Station
     @@station_all << self
     increase_counter
   end
-  # Все методы используются другими классами
 
   def add_train(train)
     @all_trains << train
@@ -42,18 +41,10 @@ class Station
   private
 
   def valide_format!
-    (@station_name =~ STATION_FORMAT) == 0
+    (@station_name =~ STATION_FORMAT).zero?
   end
 
   def validate!
     raise ' Неверный формат имени станции. ' unless valide_format!
   end
 end
-
-# +Может принимать поезда (по одному за раз)
-# +Может возвращать список всех поездов на станции,
-# +находящиеся в текущий момент
-# +Может возвращать список поездов на станции по типу
-# +(см. ниже): кол-во грузовых, пассажирских
-# Может отправлять поезда (по одному за раз,
-# при этом, поезд удаляется из списка поездов, находящихся на станции).

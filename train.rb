@@ -14,7 +14,7 @@ class Train
     nil
   end
 
-  TRAIN_NUMBER_FORMAT = /[0-9]{3}-[а-я]{2}$/i
+  TRAIN_NUMBER_FORMAT = /[0-9]{3}-[а-я]{2}$/i.freeze
 
   attr_reader :train_num, :route, :current_station, :speed, :type, :total_carriages
 
@@ -22,7 +22,7 @@ class Train
     @train_num = train_num
     validate!
     @total_carriages = []
-    @route
+    @route = nil
     @speed = 0
     @@train_all << self
     increase_counter
@@ -48,11 +48,11 @@ class Train
   end
 
   def unhook
-    @total_carriages.pop if @speed == 0
+    @total_carriages.pop if @speed.zero?
   end
 
   def sent_train(route)
-    @current_station.delete_train(self) unless @current_station.nil?
+    @current_station&.delete_train(self)
     @route = route
     @current_station = route.all_stations[0]
     @current_station.all_trains.push(self)
@@ -73,7 +73,7 @@ class Train
   private
 
   def prev_station
-    if @route.all_stations.index(@current_station) == 0
+    if @route.all_stations.index(@current_station).zero?
       nil
     else
       @route.all_stations[@route.all_stations.index(@current_station) - 1]
@@ -99,7 +99,7 @@ class Train
   end
 
   def valide_format!
-    (@train_num =~ TRAIN_NUMBER_FORMAT) == 0
+    (@train_num =~ TRAIN_NUMBER_FORMAT).zero?
   end
 
   def validate!

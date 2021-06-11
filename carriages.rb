@@ -6,7 +6,7 @@ class Carriage
   include Counter
   attr_reader :carr_num
 
-  CARRIAGE_NAMBER_FORMAT = /[0-9]{3}-[а-я]{2}$/i
+  CARRIAGE_NAMBER_FORMAT = /[0-9]{3}-[а-я]{2}$/i.freeze
 
   def initialize(carr_num, _cargo = 10)
     @carr_num = carr_num
@@ -17,7 +17,7 @@ class Carriage
   private
 
   def valide_format!
-    (@carr_num =~ CARRIAGE_NAMBER_FORMAT) == 0
+    (@carr_num =~ CARRIAGE_NAMBER_FORMAT).zero?
   end
 
   def validate!

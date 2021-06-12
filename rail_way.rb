@@ -7,7 +7,7 @@ require_relative 'cargo_carriage'
 require_relative 'passanger_carriage'
 require_relative 'modules'
 
-class RailWCyclomatic complexity for intay
+class Railway
   def initialize
     @total_stations = []
     @total_routs = []
@@ -15,6 +15,7 @@ class RailWCyclomatic complexity for intay
     @total_carriages = []
   end
 
+  # rubocop:disable Metrics/AbcSize
   def seed
     start_stations = %w[Краснодар Ростов Воронеж Москва Владимир]
     start_stations.each { |station| @total_stations << Station.new(station) }
@@ -43,30 +44,46 @@ class RailWCyclomatic complexity for intay
     train_by_num('333-пп').add_carriage(carriage_by_num('444-пв'))
   end
 
+  def show_varibles
+    system 'clear'
+    puts ' Запущена программа железная дорога '
+    puts ' 1.Создать станцию '
+    puts ' 2.Показать все станции '
+    puts ' 21 показать все станции через переменную класса станции '
+    puts ' 3.Показать все поезда на станции '
+    puts ' 31.Показать все поеда на станции используя блок. '
+    puts ' 4.Создать поезд '
+    puts ' 41 Показать поез под номером'
+    puts ' 5.Создать маршрут '
+    puts ' 6.Добавить станцию на маршрут '
+    puts ' 7.Удалить станцию с маршрута '
+    puts ' 8.Показать все маршруты'
+    puts ' 9.Назначить поезду маршрут '
+    puts ' 91. Создать новый вагон '
+    puts ' 92. Заполнить вагон '
+    puts ' 10.Добавить вагон к поезду '
+    puts ' 11.Отцепить вагон от поезда '
+    puts ' 12.Отправить поезд вперед '
+    puts ' 13.Отправить поезд назад '
+    puts ' 14.Выйти из программы'
+    print ' Выберете действие: '
+  end
+
+  def show_currently_rail_way
+    puts '************************************************************'
+    puts ' В процессе работы программы было создано: '
+    puts "поездов без типа- #{Train.counter}"
+    puts "грузовых поездов - #{CargoTrain.counter}"
+    puts "пассажирсикх поездов - #{PasangerTrain.counter}"
+    puts "станций - #{Station.counter}"
+    puts "грузовых вагонов - #{CargoCarriage.counter}"
+    puts "пассажирских вагонов - #{PassangerCarriage.counter}"
+    puts '*************************************************************'
+  end
+
   def interface
     loop do
-      system 'clear'
-      puts ' Запущена программа железная дорога '
-      puts ' 1.Создать станцию '
-      puts ' 2.Показать все станции '
-      puts ' 21 показать все станции через переменную класса станции '
-      puts ' 3.Показать все поезда на станции '
-      puts ' 31.Показать все поеда на станции используя блок. '
-      puts ' 4.Создать поезд '
-      puts ' 41 Показать поез под номером'
-      puts ' 5.Создать маршрут '
-      puts ' 6.Добавить станцию на маршрут '
-      puts ' 7.Удалить станцию с маршрута '
-      puts ' 8.Показать все маршруты'
-      puts ' 9.Назначить поезду маршрут '
-      puts ' 91. Создать новый вагон '
-      puts ' 92. Заполнить вагон '
-      puts ' 10.Добавить вагон к поезду '
-      puts ' 11.Отцепить вагон от поезда '
-      puts ' 12.Отправить поезд вперед '
-      puts ' 13.Отправить поезд назад '
-      puts ' 14.Выйти из программы'
-      print ' Выберете действие: '
+      show_varibles
       action = gets.chomp
       case action
       when '1'
@@ -96,15 +113,7 @@ class RailWCyclomatic complexity for intay
       when '13'
         sent_train_back
       when '14'
-        puts '************************************************************'
-        puts ' В процессе работы программы было создано: '
-        puts "поездов без типа- #{Train.counter}"
-        puts "грузовых поездов - #{CargoTrain.counter}"
-        puts "пассажирсикх поездов - #{PasangerTrain.counter}"
-        puts "станций - #{Station.counter}"
-        puts "грузовых вагонов - #{CargoCarriage.counter}"
-        puts "пассажирских вагонов - #{PassangerCarriage.counter}"
-        puts '*************************************************************'
+        show_currently_rail_way
         finished_all
       when '21'
         show_all_stations_by_all
@@ -197,7 +206,8 @@ class RailWCyclomatic complexity for intay
     station_locat = gets.chomp.to_i
     print ' Введите станцию которую хотите добавить: '
     station_name = gets.chomp
-    total_routs[route_index - 1].add_station(station_locat, station_by_name(station_name)).delete(nil)
+    total_routs[route_index - 1].add_station(station_locat, station_by_name(station_name))
+    total_routs[route_index - 1].delete(nil)
   end
 
   def del_station_from_route
@@ -320,4 +330,5 @@ class RailWCyclomatic complexity for intay
       puts " \n_____________________________________ "
     end
   end
+  # rubocop:enable Metrics/AbcSize
 end

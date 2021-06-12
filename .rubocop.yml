@@ -1,12 +1,21 @@
+#AllCops:
+ # Exclude:
+ #   - 'rail_way.rb'
 Style/Documentation:
   Enabled: false
 Style/FrozenStringLiteralComment:
   Enabled: false
 Metrics/AbcSize:
-  IgnoredMethods:
-    - 'seed'
-    - 'interface'
+    Excluded:
+      - 'seed'
+      - 'show_varibles'
 Metrics/ClassLength:
-  IgnoredMethods:
-    - 'seed'
-    - 'interface'
+    Max: 300
+Style/ClassVars:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Max: 40
+Metrics/MethodLength:
+  Max: 45
+Metrics/BlockLength:
+  Max: 45

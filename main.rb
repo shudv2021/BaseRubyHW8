@@ -8,6 +8,6 @@ require_relative 'route'
 require_relative 'stations'
 require_relative 'modules'
 
-rr = RailWay.new
+rr = Railway.new
 rr.seed
 rr.interface
